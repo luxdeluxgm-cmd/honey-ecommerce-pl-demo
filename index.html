@@ -19,8 +19,8 @@
       theme: {
         extend: {
           colors: {
-            laka: '#EEF0DE',   // tło strony, blada łąka
-            wosk: '#FAF8EC',   // jasne powierzchnie
+            laka: '#EEF0DE',
+            wosk: '#FAF8EC',
             miod: { DEFAULT: '#E4A52A', pale: '#F4D98C' },
             kora: { DEFAULT: '#3E2B1B', soft: '#6B5440' },
             mech: { DEFAULT: '#56693B', deep: '#2F3D26' }
@@ -44,7 +44,8 @@
   </style>
 
   <style>
-    html { scroll-padding-top: 5.5rem; }
+    html { scroll-padding-top: 9rem; }
+    @media (min-width: 768px) { html { scroll-padding-top: 8rem; } }
     html.lock { overflow: hidden; }
     :focus-visible { outline: 3px solid #2F3D26; outline-offset: 3px; }
     .on-dark :focus-visible { outline-color: #F4D98C; }
@@ -76,8 +77,15 @@
   </style>
 </head>
 
-<body id="top" class="bg-laka font-sans text-[17px] text-kora antialiased">
-  <a href="#tresc" class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[60] focus:bg-kora focus:px-4 focus:py-2 focus:text-laka">Przejdź do treści</a>
+<body id="top" class="bg-laka pt-16 font-sans text-[17px] text-kora antialiased md:pt-12">
+  <a href="#tresc" class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100000] focus:bg-kora focus:px-4 focus:py-2 focus:text-laka">Przejdź do treści</a>
+
+  <div class="on-dark fixed left-0 top-0 z-[99999] flex h-16 w-full flex-col items-center justify-center gap-2 border-b-2 border-miod bg-kora px-4 text-laka shadow-md md:h-12 md:flex-row md:gap-6">
+    <span class="text-center font-mono text-[10px] uppercase tracking-widest md:text-xs">Przykładowa strona</span>
+    <a href="https://jantokarzewski.pl/strony-internetowe" class="bg-laka px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-kora transition-colors hover:bg-miod hover:text-kora md:text-xs">
+      Powrót
+    </a>
+  </div>
 
   <div class="on-dark bg-mech-deep text-sm text-laka">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-2 sm:px-8">
@@ -86,7 +94,7 @@
     </div>
   </div>
 
-  <header class="sticky top-0 z-30 border-b border-kora/15 bg-laka">
+  <header class="sticky top-16 z-30 md:top-12 border-b border-kora/15 bg-laka">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
       <a href="#top" class="flex items-center gap-3" aria-label="Pasieka u Włodka, początek strony">
         <svg viewBox="0 0 40 46" class="h-10 w-9 shrink-0" aria-hidden="true">
@@ -180,7 +188,7 @@
       <div class="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-12 lg:gap-16">
         <figure class="lg:col-span-5">
           <div class="aspect-[4/5] overflow-hidden bg-mech">
-            <img data-photo="beekeeper" data-w="900" alt="" class="h-full w-full object-cover" loading="lazy">
+            <img data-photo="beekeeper" data-w="1000" alt="" class="h-full w-full object-cover" loading="lazy">
           </div>
           <figcaption class="mt-3 text-sm text-laka/80">Włodek podczas majowego przeglądu uli (zdjęcie poglądowe).</figcaption>
         </figure>
@@ -334,8 +342,8 @@
     </div>
     <div class="border-t border-laka/20">
       <div class="mx-auto max-w-7xl space-y-2 px-5 py-6 text-sm text-laka/85 sm:px-8">
-        <p>To projekt demonstracyjny. Pasieka u Włodka jest firmą fikcyjną, a zakupy w tym sklepie są tylko symulacją: nic nie zostanie wysłane ani opłacone.</p>
         <p>Produkty pszczele są środkami spożywczymi i nie są lekami. Przy alergii na produkty pszczele skonsultuj się z lekarzem.</p>
+        <p>Strona przygotowana przez <a href="https://jantokarzewski.pl" class="font-bold underline decoration-laka/40 underline-offset-4 hover:decoration-laka">Jana Tokarzewskiego</a>.</p>
       </div>
     </div>
   </footer>
@@ -404,7 +412,9 @@
       beekeeper:  { src: 'photo-1758522966287-df92946a4e23', page: 'c6Fmsr00R-c', author: 'Vitaly Gariev',       handle: 'silverkblack',  alt: 'Pszczelarz w siatce ochronnej na kwitnącym polu' }
     };
     const UTM = '?utm_source=pasieka_u_wlodka_demo&utm_medium=referral';
-    const photoUrl = (key, w = 800) => `https://images.unsplash.com/${PHOTOS[key].src}?auto=format&fit=crop&w=${w}&q=75`;
+    const sizeFor = w => (w > 900 ? 1200 : 800);
+    const photoUrl = (key, w = 800) => `img/${key}-${sizeFor(w)}.webp`;
+    const remoteUrl = (key, w) => `https://images.unsplash.com/${PHOTOS[key].src}?auto=format&fit=max&w=${w}&q=75`;
 
     const STORAGE_HONEY = 'Przechowuj w temperaturze pokojowej, z dala od światła. Skrystalizowany miód można podgrzać w kąpieli wodnej, nie wyżej niż do 40°C.';
     const CATS = [
@@ -557,7 +567,7 @@
       root.innerHTML = CATS.filter(c => state.filter === 'all' || state.filter === c.id).map(c => `
         <section aria-labelledby="cat-${c.id}" class="lg:grid lg:grid-cols-12 lg:gap-10">
           <header class="mb-8 lg:col-span-3 lg:mb-0">
-            <div class="lg:sticky lg:top-28">
+            <div class="lg:sticky lg:top-40">
               <h3 id="cat-${c.id}" class="font-serif text-3xl font-bold">${c.title}</h3>
               <p class="mt-3 max-w-xs leading-relaxed text-kora-soft">${c.intro}</p>
             </div>
@@ -585,7 +595,7 @@
         if (e.target !== dlg) return;
         const r = dlg.getBoundingClientRect();
         const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
-        if (!inside) dlg.close();   // klik w tło, a nie w pasek przewijania okna
+        if (!inside) dlg.close();
       });
     });
 
@@ -829,7 +839,13 @@
       e.currentTarget.setAttribute('aria-expanded', String(open));
     });
 
-    document.addEventListener('error', e => { if (e.target instanceof HTMLImageElement) e.target.classList.add('failed'); }, true);
+    document.addEventListener('error', e => {
+      const img = e.target;
+      if (!(img instanceof HTMLImageElement)) return;
+      const m = (img.getAttribute('src') || '').match(/^img\/([A-Za-z]+)-(\d+)\.webp$/);
+      if (m && PHOTOS[m[1]]) { img.src = remoteUrl(m[1], Number(m[2])); return; }
+      img.classList.add('failed');
+    }, true);
 
     $$('img[data-photo]').forEach(img => {
       const key = img.dataset.photo;
